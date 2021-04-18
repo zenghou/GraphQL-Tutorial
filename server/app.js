@@ -2,10 +2,12 @@ const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./schema/schema');
 const mongoose = require('mongoose');
+var cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
+app.use(cors());
 
 // set up middleware
 // graphqlHTTP must take in a schema
