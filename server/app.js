@@ -2,6 +2,8 @@ const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./schema/schema');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 
@@ -16,7 +18,7 @@ app.use('/graphql', graphqlHTTP({
 
 
 mongoose.connect(
-  'mongodb+srv://zenghou:admin123@cluster0.2tf21.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', 
+  process.env.MONGODB_URL, 
   {useNewUrlParser: true }, 
   (err, db) => {
     if (err) {
@@ -27,8 +29,6 @@ mongoose.connect(
   },
 );
 
-const PORT_NUMBER = 4000;
-
-app.listen(PORT_NUMBER, () => {
-  console.log(`Now listening to request on ${PORT_NUMBER}`);
+app.listen(process.env.PORT_NUMBER, () => {
+  console.log(`Now listening to request on ${process.env.PORT_NUMBER}`);
 });
