@@ -30,7 +30,7 @@ const BookType = new GraphQLObjectType({
     author: {
       type: AuthorType,
       resolve(parent, args) {
-        // return _.find(authors, { id: parent.authorid })
+        return Author.findById(parent.authorId);
       }
     } 
   })
@@ -43,10 +43,12 @@ const AuthorType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     age: { type: GraphQLInt }, 
-    book: {
+    books: {
       type: new GraphQLList(BookType),
       resolve(parent, args) {
-        // return _.filter(booksData, { authorid: parent.id })
+        return Book.find({
+          authorId: parent.id
+        })
       }
     }
   })
@@ -64,26 +66,26 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) { 
         // args.id to get id
         // code to get data from db/other source
-        // return _.find(booksData, {id: args.id});
+        return Book.findById(args.id);
       }
     },
     books: {
       type: new GraphQLList(BookType),
       resolve(parent, args) {
-        // return booksData;
+        return Book.find({});
       }
     },
     author: {
       type: AuthorType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        // return _.find(authors, { id: args.id });
+        return Author.findById(args.id);
       }
     },
     authors: {
       type: new GraphQLList(AuthorType),
       resolve(parent, args) {
-        // return authors;
+        return Author.find({});
       }
     }
   }
@@ -108,6 +110,22 @@ const Mutation = new GraphQLObjectType({
         // need to return so that you can return upon mutation
         return author.save();
       },
+    },
+    addBook: {
+      type: BookType,
+      args: {
+        name: { type: GraphQLString },
+        genre: { type: GraphQLString },
+        authorId: { type: GraphQLID },
+      },
+      resolve(parent, args) {
+        let book = new Book({
+          name: args.name,
+          genre: args.genre,
+          authorId: args.authorId,
+        });
+        return book.save();
+      }
     }
   }
 })

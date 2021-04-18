@@ -5,6 +5,7 @@ const bookSchema = new Schema({
   // id is automatically created
   name: String,
   genre: String,
+  // Manual references where you save the _id field of one document in another document as a reference. Then your application can run a second query to return the related data. These references are simple and sufficient for most use cases.
   authorId: String,
 });
 
