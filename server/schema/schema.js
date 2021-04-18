@@ -1,5 +1,7 @@
 const graphql = require('graphql');
 const _ = require('lodash');
+const Book = require('../models/book');
+const Author = require('../models/author');
 
 // defines the shape of the graph
 
@@ -14,22 +16,7 @@ const {
   GraphQLList,
   GraphQLSchema,
   GraphQLID,
-} = graphql; // ES6 destructuring
-
-// const booksData = [
-//   { name: 'Name of the Wind', genre: 'Fantasy', id: '1', authorid: '1'},
-//   { name: 'Final Empire', genre: 'Fantasy', id: '2', authorid: '2'},
-//   { name: 'The Long Earth', genre: 'Sci-Fi', id: '3', authorid: '3'},
-//   { name: 'The Hero of Ages', genre: 'Fantasy', id: '4', authorid: '2'},
-//   { name: 'The Color of Magic', genre: 'Fantasy', id: '5', authorid: '3'},
-//   { name: 'The Light Fantastic', genre: 'Fantasy', id: '6', authorid: '3'},
-// ]
-
-// const authors = [
-//   { name: 'Peter Russo', age: 44, id: '1'},
-//   { name: 'Brandon Sanderman', age: 42, id: '2'},
-//   { name: 'Terry Prince', age: 64, id: '3'},
-// ]
+} = graphql;
 
 const BookType = new GraphQLObjectType({
   name: 'Book',
@@ -102,6 +89,30 @@ const RootQuery = new GraphQLObjectType({
   }
 });
 
+// allows you to mutate data in db
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addAuthor: {
+      type: AuthorType,
+      args: {
+        name: { type: GraphQLString},
+        age: { type: GraphQLInt},
+      },
+      resolve(parent, args) {
+        // mongoose model
+        let author = new Author({
+          name: args.name,
+          age: args.age
+        });
+        // need to return so that you can return upon mutation
+        return author.save();
+      },
+    }
+  }
+})
+
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation: Mutation,
 });
