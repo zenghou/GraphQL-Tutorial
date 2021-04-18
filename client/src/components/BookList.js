@@ -1,4 +1,4 @@
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { GET_BOOK_QUERY } from '../queries/queries';
 
 const displayBooks = (loading, error, data) => {
