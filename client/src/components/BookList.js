@@ -1,14 +1,5 @@
 import { useQuery, gql } from '@apollo/client';
-
-const BOOK_LIST = gql`
-  query GetBookList {
-    books {
-      name
-      id
-    }
-  }
-`;
-
+import { GET_BOOK_QUERY } from '../queries/queries';
 
 const displayBooks = (loading, error, data) => {
   if (loading) {
@@ -27,7 +18,7 @@ const displayBooks = (loading, error, data) => {
 
 // stateless functional components cannot have methods, they need to be defined outside
 function BookList() {
-  const { loading, error, data } = useQuery(BOOK_LIST);
+  const { loading, error, data } = useQuery(GET_BOOK_QUERY);
   return (<ul>
     {displayBooks(loading, error, data)}
   </ul>)
